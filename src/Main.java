@@ -13,8 +13,8 @@ public class Main {
     final String memberActivityPath = "src/memberactivity.txt";
 
     public void mainProgram() {
+        List<Member> listOfMembers = createMembersListFromFile(membersFile);
         while (true) {
-            List<Member> listOfMembers = createMembersListFromFile(membersFile);
             String userInput = getUserInput();
             System.out.println(membershipControl(userInput, listOfMembers));
         }
@@ -87,7 +87,6 @@ public class Main {
     public boolean lessTimeThanAYear(String lastpaymentString) {
         LocalDate lastPaymentDate = LocalDate.parse(lastpaymentString);
         LocalDate currentDate = LocalDate.now();
-        Period datedif = Period.between(lastPaymentDate, currentDate);
 
         if (lastPaymentDate.isAfter(currentDate.minusYears(1)) || lastPaymentDate.isEqual(currentDate.minusYears(1))) {
             return true;
