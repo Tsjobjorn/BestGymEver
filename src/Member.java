@@ -16,6 +16,10 @@ public class Member {
         return personalNumber;
     }
 
+    public void setLastYearlyPayment(String lastYearlyPayment) {
+        this.lastYearlyPayment = lastYearlyPayment;
+    }
+
     public String getFullName() {
         return fullName;
     }

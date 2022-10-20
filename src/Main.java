@@ -73,9 +73,9 @@ public class Main {
         for (Member member : listOfMembers) {
             if (userInput.equalsIgnoreCase(member.getFullName()) || userInput.equals(member.getPersonalNumber())) {
                 String lastPaymentDate = member.getLastYearlyPayment();
-                membership = lessTimeThanAYear(lastPaymentDate);
+                membership = lessTimeThanAYear(lastPaymentDate); //Calls method to see if paymentdate was less than a year ago.
                 if (membership == true) {
-                    registerMemberActivity(memberActivityPath, member);
+                    registerMemberActivity(memberActivityPath, member); //Calls method to register member activity(writes to file)
                     return member.getFullName() + " is an activate member. Last payment date: " + member.getLastYearlyPayment();
                 } else {
                     return member.getFullName() + " is an inactive member, payment is due. Last payment date: " + member.getLastYearlyPayment();

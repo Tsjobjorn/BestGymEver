@@ -28,6 +28,8 @@ class MainTest {
         assertTrue(memberslistFromFile.get(0).getPersonalNumber().equals("9010211234"));
         assertTrue(memberslistFromFile.get(1).getFullName().equals("Björn Bjuv"));
         assertTrue(!memberslistFromFile.get(2).getPersonalNumber().equals("9010211234"));
+        assertTrue(memberslistFromFile.get(0).getLastYearlyPayment().equals("2022-07-01")); //Checks that lastpaymentdate is correctly read from file as it is changed in other test.
+        assertTrue(memberslistFromFile.get(1).getLastYearlyPayment().equals("2012-12-02"));//Checks that lastpaymentdate is correctly read from file as it is changed in other test.
     }
 
 
@@ -35,12 +37,16 @@ class MainTest {
     public final void checkMembership() {
         List<Member> testMembers = testMain.createMembersListFromFile(testMembersFile);
         String activeCustomer = "Alina Andersson";
+        testMembers.get(0).setLastYearlyPayment(LocalDate.now().minusMonths(5).toString());
+        //Ensures testmember 'Alina Andersson' is active, regardless of when the test is run.
         String inactiveCustomer = "8204021234";
+        testMembers.get(1).setLastYearlyPayment(LocalDate.now().minusYears(1).minusMonths(3).toString());
+        //Ensures testmember 'Björn Bjuv' is inactive, regardless of when the test is run.
         String notCustomer = "9102025423";
         //Tests if correct input can be found by name, and if active status is read correctly
-        assertTrue(testMain.membershipControl(activeCustomer, testMembers).equals("Alina Andersson is an activate member. Last payment date: 2022-07-01"));
+        assertTrue(testMain.membershipControl(activeCustomer, testMembers).equals("Alina Andersson is an activate member. Last payment date: " + LocalDate.now().minusMonths(5).toString()));
         //Tests if correct input can be found by 'Personal-number', and if inactive status can be read correctly.
-        assertTrue(testMain.membershipControl(inactiveCustomer, testMembers).equals("Björn Bjuv is an inactive member, payment is due. Last payment date: 2012-12-02"));
+        assertTrue(testMain.membershipControl(inactiveCustomer, testMembers).equals("Björn Bjuv is an inactive member, payment is due. Last payment date: " + LocalDate.now().minusYears(1).minusMonths(3).toString()));
         //Tests if incorrect input works as intended.
         assertTrue(testMain.membershipControl(notCustomer, testMembers).equals("No member found with the full name or personal-number of \"9102025423\""));
 
@@ -68,7 +74,7 @@ class MainTest {
     @Test
     public final void checkActivityLog() { //Tests the writing to file function and that data is saved correctly.
         List<Member> testMembers = testMain.createMembersListFromFile(testMembersFile);
-        String writtenRowInTestFile="";
+        String writtenRowInTestFile = "";
         assertTrue(writtenRowInTestFile.isBlank());
         testMain.registerMemberActivity(testactivitypath, testMembers.get(0));
         testMain.registerMemberActivity(testactivitypath, testMembers.get(1));
@@ -81,15 +87,15 @@ class MainTest {
             while (readTextFile.hasNext()) {
                 writtenRowInTestFile = readTextFile.nextLine();
                 System.out.println(writtenRowInTestFile);
-                assertTrue(writtenRowInTestFile.equals("Alina Andersson worked out "+LocalDate.now()));
+                assertTrue(writtenRowInTestFile.equals("Alina Andersson worked out " + LocalDate.now()));
                 assertTrue(!writtenRowInTestFile.isBlank());
                 writtenRowInTestFile = readTextFile.nextLine();
                 System.out.println(writtenRowInTestFile);
-                assertTrue(writtenRowInTestFile.equals("Björn Bjuv worked out "+LocalDate.now()));
+                assertTrue(writtenRowInTestFile.equals("Björn Bjuv worked out " + LocalDate.now()));
                 assertTrue(!writtenRowInTestFile.isBlank());
                 writtenRowInTestFile = readTextFile.nextLine();
                 System.out.println(writtenRowInTestFile);
-                assertTrue(writtenRowInTestFile.equals("Carina Cederholm worked out "+LocalDate.now()));
+                assertTrue(writtenRowInTestFile.equals("Carina Cederholm worked out " + LocalDate.now()));
                 assertTrue(!writtenRowInTestFile.isBlank());
             }
 
@@ -102,7 +108,6 @@ class MainTest {
             e.printStackTrace();
             System.exit(0);
         }
-
 
 
     }
